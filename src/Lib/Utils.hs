@@ -1,9 +1,10 @@
+{-# LANGUAGE DerivingStrategies #-}
 module Lib.Utils
     ( module QuickCheck
-    , quickCheck
-    , allEqual
+    , module Lib.Utils
     ) where
 
+import Data.Coerce
 import Test.QuickCheck as QuickCheck hiding (quickCheck)
 
 quickCheck :: Testable prop => prop -> IO ()
@@ -18,3 +19,11 @@ quickCheck prop = do
 
 allEqual :: (Show a, Eq a) => [a] -> Property
 allEqual xs = conjoin $ zipWith (===) xs $ tail xs
+
+newtype ASCIIChar = ASCIIChar
+    { getASCIIChar :: Char
+    } deriving stock (Show, Eq)
+
+instance Arbitrary ASCIIChar where
+    arbitrary = coerce arbitraryASCIIChar
+    shrink _ = []
