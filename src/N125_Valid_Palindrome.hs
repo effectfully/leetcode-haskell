@@ -50,14 +50,14 @@ bruteForce :: String -> Bool
 bruteForce str = strPrep == reverse strPrep where
     strPrep = prepare str
 
--- >>> usingVector "A man, a plan, a canal: Panama"
+-- >>> twoPointers "A man, a plan, a canal: Panama"
 -- True
--- >>> usingVector "race a car"
+-- >>> twoPointers "race a car"
 -- False
--- >>> usingVector " "
+-- >>> twoPointers " "
 -- True
-usingVector :: String -> Bool
-usingVector str = go 0 $ Vector.length vec - 1 where
+twoPointers :: String -> Bool
+twoPointers str = go 0 $ Vector.length vec - 1 where
     vec = Vector.fromList $ prepare str
 
     go i j
@@ -72,12 +72,12 @@ correctness = do
         let strEven = strL ++ reverse strL
             strOdd  = strL ++ [middle] ++ reverse strL
         conjoin
-            [ bruteForce strL === usingVector strL
+            [ bruteForce strL === twoPointers strL
             , allEqual
                 [ True
                 , bruteForce strEven
-                , usingVector strEven
+                , twoPointers strEven
                 , bruteForce strOdd
-                , usingVector strOdd
+                , twoPointers strOdd
                 ]
             ]

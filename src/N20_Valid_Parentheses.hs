@@ -35,26 +35,26 @@ Constraints:
 parenTable :: [(Char, Char)]
 parenTable = [('(', ')'), ('{', '}'), ('[', ']')]
 
--- >>> direct ""
+-- >>> linear ""
 -- True
--- >>> direct "("
+-- >>> linear "("
 -- False
--- >>> direct "()"
+-- >>> linear "()"
 -- True
--- >>> direct "([)"
+-- >>> linear "([)"
 -- False
--- >>> direct "([)]"
+-- >>> linear "([)]"
 -- False
--- >>> direct "([])"
+-- >>> linear "([])"
 -- True
--- >>> direct "()[]{}"
+-- >>> linear "()[]{}"
 -- True
--- >>> direct "({}))"
+-- >>> linear "({}))"
 -- False
--- >>> direct "({([[{()[]}]]{[](){}})((()))}[])"
+-- >>> linear "({([[{()[]}]]{[](){}})((()))}[])"
 -- True
-direct :: String -> Bool
-direct = go [] where
+linear :: String -> Bool
+linear = go [] where
     go ctx ""      = null ctx
     go ctx (c:str) = if
         | Just c' <- lookup c parenTable -> go (c':ctx) str

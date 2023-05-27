@@ -34,11 +34,11 @@ import Data.HashMap.Strict qualified as HashMap
 toAnagram :: String -> HashMap Char Int
 toAnagram = HashMap.fromListWith (+) . map (\c -> (c, 1))
 
--- >>> usingHashMap ["eat","tea","tan","ate","nat","bat"]
+-- >>> linear ["eat","tea","tan","ate","nat","bat"]
 -- [["bat"],["ate","tea","eat"],["nat","tan"]]
--- >>> usingHashMap [""]
+-- >>> linear [""]
 -- [[""]]
--- >>> usingHashMap ["a"]
+-- >>> linear ["a"]
 -- [["a"]]
-usingHashMap :: [String] -> [[String]]
-usingHashMap = HashMap.elems . HashMap.fromListWith (++) . map (\str -> (toAnagram str, [str]))
+linear :: [String] -> [[String]]
+linear = HashMap.elems . HashMap.fromListWith (++) . map (\str -> (toAnagram str, [str]))

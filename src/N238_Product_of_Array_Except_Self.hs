@@ -26,29 +26,29 @@ Constraints:
 
 import Lib.Utils
 
--- >>> bruteForce [1,2,3,4]
+-- >>> quadratic [1,2,3,4]
 -- [24,12,8,6]
--- >>> bruteForce [-1,1,0,-3,3]
+-- >>> quadratic [-1,1,0,-3,3]
 -- [0,0,9,0,0]
--- >>> bruteForce [-5,2,4,0,1,2,10,-7,0]
+-- >>> quadratic [-5,2,4,0,1,2,10,-7,0]
 -- [0,0,0,0,0,0,0,0,0]
 -- [820800,-615600,-273600,-2462400,1231200,-492480,-129600,410400,-492480,-615600,-2462400]
--- >>> bruteForce [-3,4,9,1,-2,5,19,-6,5,4,1]
-bruteForce :: [Int] -> [Int]
-bruteForce = go 1 where
+-- >>> quadratic [-3,4,9,1,-2,5,19,-6,5,4,1]
+quadratic :: [Int] -> [Int]
+quadratic = go 1 where
     go _   []     = []
     go acc (n:ns) = product (acc : ns) : go (acc * n) ns
 
--- >>> backwardsCache [1,2,3,4]
+-- >>> linear [1,2,3,4]
 -- [24,12,8,6]
--- >>> backwardsCache [-1,1,0,-3,3]
+-- >>> linear [-1,1,0,-3,3]
 -- [0,0,9,0,0]
--- >>> backwardsCache [-5,2,4,0,1,2,10,-7,0]
+-- >>> linear [-5,2,4,0,1,2,10,-7,0]
 -- [0,0,0,0,0,0,0,0,0]
--- >>> backwardsCache [-3,4,9,1,-2,5,19,-6,5,4,1]
+-- >>> linear [-3,4,9,1,-2,5,19,-6,5,4,1]
 -- [820800,-615600,-273600,-2462400,1231200,-492480,-129600,410400,-492480,-615600,-2462400]
-backwardsCache :: [Int] -> [Int]
-backwardsCache ns0 = go 1 cache ns0 where
+linear :: [Int] -> [Int]
+linear ns0 = go 1 cache ns0 where
     cache = tail $ scanr1 (*) ns0
 
     go acc []     _      = [acc]
@@ -60,4 +60,4 @@ backwardsCache ns0 = go 1 cache ns0 where
 correctness :: IO ()
 correctness = quickCheck $ \n0 n1 ns2 -> do
     let ns = n0 : n1 : ns2
-    bruteForce ns === backwardsCache ns
+    quadratic ns === linear ns

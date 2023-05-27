@@ -24,18 +24,18 @@ import Data.HashMap.Strict (HashMap)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List
 
--- >>> bruteForce "anagram" "nagaram"
+-- >>> nlogn "anagram" "nagaram"
 -- True
--- >>> bruteForce "rat" "car"
+-- >>> nlogn "rat" "car"
 -- False
-bruteForce :: String -> String -> Bool
-bruteForce str1 str2 = sort str1 == sort str2
+nlogn :: String -> String -> Bool
+nlogn str1 str2 = sort str1 == sort str2
 
 toAnagram :: String -> HashMap Char Int
 toAnagram = HashMap.fromListWith (+) . map (\c -> (c, 1))
 
-usingHashMap :: String -> String -> Bool
-usingHashMap str1 str2 = toAnagram str1 == toAnagram str2
+linear :: String -> String -> Bool
+linear str1 str2 = toAnagram str1 == toAnagram str2
 
 -- >>> correctness
 -- +++ OK, passed 1000 tests.
@@ -47,15 +47,15 @@ correctness = do
         forAll (shuffle str1) $ \str2 ->
             allEqual
                 [ True
-                , bruteForce str1 str2
-                , usingHashMap str1 str2
+                , nlogn str1 str2
+                , linear str1 str2
                 ]
     quickCheck $ \(NonEmpty str1) ->
         forAll (shuffle $ take 1 str1 ++ str1) $ \str2 ->
             allEqual
                 [ False
-                , bruteForce str1 str2
-                , usingHashMap str1 str2
+                , nlogn str1 str2
+                , linear str1 str2
                 ]
     quickCheck $ \(ASCIIString str1) (ASCIIString str2) ->
-        bruteForce str1 str2 == usingHashMap str1 str2
+        nlogn str1 str2 == linear str1 str2

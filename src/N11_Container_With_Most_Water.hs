@@ -34,23 +34,23 @@ import Lib.Utils
 
 import Data.Vector qualified as Vector
 
--- >>> bruteForce [1,8,6,2,5,4,8,3,7]
+-- >>> quadratic [1,8,6,2,5,4,8,3,7]
 -- 49
--- >>> bruteForce [1,1]
+-- >>> quadratic [1,1]
 -- 1
-bruteForce :: [Int] -> Int
-bruteForce []                  = 0
-bruteForce (height1 : heights) =
+quadratic :: [Int] -> Int
+quadratic []                  = 0
+quadratic (height1 : heights) =
     max
         (maximum $ 0 : zipWith (\dist height2 -> min height1 height2 * dist) [1..] heights)
-        (bruteForce heights)
+        (quadratic heights)
 
--- >>> twoPointers [1,8,6,2,5,4,8,3,7]
+-- >>> linear [1,8,6,2,5,4,8,3,7]
 -- 49
--- >>> twoPointers [1,1]
+-- >>> linear [1,1]
 -- 1
-twoPointers :: [Int] -> Int
-twoPointers height = go maxSoFar0 l0 r0 where
+linear :: [Int] -> Int
+linear height = go maxSoFar0 l0 r0 where
     l0        = 0
     r0        = Vector.length heightVec - 1
     maxSoFar0 = toArea l0 r0
@@ -72,4 +72,4 @@ twoPointers height = go maxSoFar0 l0 r0 where
 correctness :: IO ()
 correctness = quickCheck $ \x0 x1 xs2 -> do
     let xs = x0 : x1 : xs2
-    bruteForce xs === twoPointers xs
+    quadratic xs === linear xs

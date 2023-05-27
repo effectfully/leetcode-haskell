@@ -28,21 +28,21 @@ Constraints:
 
 import Lib.Utils
 
--- >>> bruteForce [7,1,5,3,6,4]
+-- >>> quadratic [7,1,5,3,6,4]
 -- 5
--- >>> bruteForce [7,6,4,3,1]
+-- >>> quadratic [7,6,4,3,1]
 -- 0
-bruteForce :: [Int] -> Int
-bruteForce []     = 0
-bruteForce (x:xs) = max (maximum (0:xs) - x) (bruteForce xs)
+quadratic :: [Int] -> Int
+quadratic []     = 0
+quadratic (x:xs) = max (maximum (0:xs) - x) (quadratic xs)
 
--- >>> onePass [7,1,5,3,6,4]
+-- >>> linear [7,1,5,3,6,4]
 -- 5
--- >>> onePass [7,6,4,3,1]
+-- >>> linear [7,6,4,3,1]
 -- 0
-onePass :: [Int] -> Int
-onePass []         = 0
-onePass (x0 : xs0) = go 0 x0 xs0 where
+linear :: [Int] -> Int
+linear []         = 0
+linear (x0 : xs0) = go 0 x0 xs0 where
     go maxDiff _        []     = maxDiff
     go maxDiff minPrice (x:xs) = go maxDiff' minPrice' xs where
         maxDiff'  = max maxDiff $ x - minPrice
@@ -53,4 +53,4 @@ onePass (x0 : xs0) = go 0 x0 xs0 where
 correctness :: IO ()
 correctness = quickCheck $ \xsPre -> do
     let xs = map abs xsPre
-    bruteForce xs === onePass xs
+    quadratic xs === linear xs

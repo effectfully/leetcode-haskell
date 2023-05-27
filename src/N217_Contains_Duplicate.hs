@@ -27,29 +27,29 @@ import Lib.Utils
 import Data.IntSet qualified as IntSet
 import Data.List
 
--- >>> bruteForce [1,2,3,1]
+-- >>> quadratic [1,2,3,1]
 -- True
--- >>> bruteForce [1,2,3,4]
+-- >>> quadratic [1,2,3,4]
 -- False
--- >>> bruteForce [1,1,1,3,3,4,3,2,4,2]
+-- >>> quadratic [1,1,1,3,3,4,3,2,4,2]
 -- True
-bruteForce :: [Int] -> Bool
-bruteForce []     = False
-bruteForce (x:xs) = x `elem` xs || bruteForce xs
+quadratic :: [Int] -> Bool
+quadratic []     = False
+quadratic (x:xs) = x `elem` xs || quadratic xs
 
-bruteForce' :: [Int] -> Bool
-bruteForce' xs = not $ length (nub xs) == length xs
+quadratic' :: [Int] -> Bool
+quadratic' xs = not $ length (nub xs) == length xs
 
-usingIntSet :: [Int] -> Bool
-usingIntSet xs = not $ IntSet.size (IntSet.fromList xs) == length xs
+linear :: [Int] -> Bool
+linear xs = not $ IntSet.size (IntSet.fromList xs) == length xs
 
-usingIntSetInAcc :: [Int] -> Bool
-usingIntSetInAcc = go IntSet.empty where
+linearShortCirc :: [Int] -> Bool
+linearShortCirc = go IntSet.empty where
     go _   []     = False
     go acc (x:xs) = x `IntSet.member` acc || go (IntSet.insert x acc) xs
 
-usingIntSetInAcc' :: [Int] -> Bool
-usingIntSetInAcc' xs = foldr step (\_ -> False) xs IntSet.empty where
+linearShortCirc' :: [Int] -> Bool
+linearShortCirc' xs = foldr step (\_ -> False) xs IntSet.empty where
     step x rec acc = x `IntSet.member` acc || rec (IntSet.insert x acc)
 
 -- >>> correctness
@@ -57,9 +57,9 @@ usingIntSetInAcc' xs = foldr step (\_ -> False) xs IntSet.empty where
 correctness :: IO ()
 correctness = quickCheck $ \xs ->
     allEqual
-        [ bruteForce xs
-        , bruteForce xs
-        , usingIntSet xs
-        , usingIntSetInAcc xs
-        , usingIntSetInAcc' xs
+        [ quadratic xs
+        , quadratic xs
+        , linear xs
+        , linearShortCirc xs
+        , linearShortCirc' xs
         ]
