@@ -27,3 +27,11 @@ newtype ASCIIChar = ASCIIChar
 instance Arbitrary ASCIIChar where
     arbitrary = coerce arbitraryASCIIChar
     shrink _ = []
+
+newtype UpperCaseLetter = UpperCaseLetter
+    { getUpperCaseLetter :: Char
+    } deriving stock (Show, Eq)
+
+instance Arbitrary UpperCaseLetter where
+    arbitrary = coerce $ elements ['A' .. 'Z']
+    shrink _ = []
